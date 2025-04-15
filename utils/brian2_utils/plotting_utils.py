@@ -8,7 +8,7 @@ def plot_firing_rate(r_E, r_I, r_E_sels, title_prefix=''):
     """
 
     # plotting
-    figure(figsize=(6, 4))
+    figure(figsize=(8, 4))
     title(title_prefix + 'Population rates')
     xlabel('ms')
     ylabel('Hz')
@@ -30,7 +30,7 @@ def plot_raster(N_activity_plot, sp_E, sp_I, sp_E_sels, p, title_prefix=''):
     """
     Plot the firing rates of the neurons in the network."
     """
-    figure(figsize=(6, 4))
+    figure(figsize=(8, 4))
     title(title_prefix +
           f'Population activities ({N_activity_plot} neurons/pop)')
     xlabel('ms')

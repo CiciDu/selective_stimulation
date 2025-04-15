@@ -2,15 +2,25 @@ from brian2 import *
 
 
 def set_DC_input(DC_amp=0.5,  # in nA
+                 DC_amp_slope=0,  # in nA/s
                  DC_duration=800,  # in ms
                  DC_start_time=0,  # in ms
-                 timestep=25 * ms
+                 timestep=1 * ms
                  ):
-
+    
+    # get number of timestamps before the DC current starts
     DC_prior_start_ts = int(DC_start_time * ms / timestep)
+    # get number of timestamps in the DC duration
     DC_ts = int(DC_duration * ms / timestep)
+
+    # make DC input incorporate the slope
+    # Time array in seconds
+    time_array = np.arange(DC_ts) * timestep
+    # Compute ramping DC current in nA
+    DC_array = DC_amp + DC_amp_slope * (time_array / second)
+
     DC_input = TimedArray(
-        np.r_[np.zeros(DC_prior_start_ts), np.ones(DC_ts), np.zeros(50)] * DC_amp * nA, dt=timestep)
+        np.r_[np.zeros(DC_prior_start_ts), DC_array, np.zeros(50)] * nA, dt=timestep)
     return DC_input
 
 
@@ -26,7 +36,7 @@ def set_sino_input(sino_start_time=0,  # in ms
         timestep  # break the time into timestep
     sino_array = sino_amp * sin(2 * pi * sino_freq * Hz * sino_ts)
     sino_input = TimedArray(
-        np.r_[np.zeros(sino_prior_start_ts), sino_array] * nA, dt=timestep)
+        np.r_[np.zeros(sino_prior_start_ts), sino_array, np.zeros(50)] * nA, dt=timestep)
     return sino_input
 
 
