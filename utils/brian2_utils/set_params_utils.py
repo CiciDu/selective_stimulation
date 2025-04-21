@@ -7,7 +7,7 @@ def set_DC_input(DC_amp=0.5,  # in nA
                  DC_start_time=0,  # in ms
                  timestep=1 * ms
                  ):
-    
+
     # get number of timestamps before the DC current starts
     DC_prior_start_ts = int(DC_start_time * ms / timestep)
     # get number of timestamps in the DC duration
@@ -166,8 +166,9 @@ def set_monitors(N_activity_plot, N_non, N_sub, p, P_E, P_I,
                                     'I_AMPA_rec', 'I_NMDA_rec', 'I_GABA_rec']):
 
     # Add StateMonitors to track the DC current
-    DC_monitor_E = StateMonitor(P_E, currents_to_track, record=E_neuron_index)
-    DC_monitor_I = StateMonitor(P_I, currents_to_track, record=True)
+    current_monitor_E = StateMonitor(
+        P_E, currents_to_track, record=E_neuron_index)
+    current_monitor_I = StateMonitor(P_I, currents_to_track, record=True)
 
     sp_E_sels = [SpikeMonitor(P_E[pi:pi + N_activity_plot])
                  for pi in range(N_non, N_non + p * N_sub, N_sub)]
@@ -178,19 +179,20 @@ def set_monitors(N_activity_plot, N_non, N_sub, p, P_E, P_I,
                 for pi in range(N_non, N_non + p * N_sub, N_sub)]
     r_E = PopulationRateMonitor(P_E[:N_non])
     r_I = PopulationRateMonitor(P_I)
-    return DC_monitor_E, DC_monitor_I, sp_E_sels, sp_E, sp_I, r_E_sels, r_E, r_I
+    return current_monitor_E, current_monitor_I, sp_E_sels, sp_E, sp_I, r_E_sels, r_E, r_I
 
 
 def set_monitors_for_optimization_algorithm(N_activity_plot, N_non, N_sub, p, P_E, P_I,
-                 E_neuron_index=[0],
-                 currents_to_track=['I_syn', 'I_DC', 'I_sino', 'I_AMPA_ext',
-                                    'I_AMPA_rec', 'I_NMDA_rec', 'I_GABA_rec']):
+                                            E_neuron_index=[0],
+                                            currents_to_track=['I_syn', 'I_DC', 'I_sino', 'I_AMPA_ext',
+                                                               'I_AMPA_rec', 'I_NMDA_rec', 'I_GABA_rec']):
 
     # Add StateMonitors to track the DC current
-    DC_monitor_E = StateMonitor(P_E, currents_to_track, record=E_neuron_index)
+    current_monitor_E = StateMonitor(
+        P_E, currents_to_track, record=E_neuron_index)
 
     r_E_sels = [PopulationRateMonitor(P_E[pi:pi + N_sub])
                 for pi in range(N_non, N_non + p * N_sub, N_sub)]
     r_E = PopulationRateMonitor(P_E[:N_non])
     r_I = PopulationRateMonitor(P_I)
-    return DC_monitor_E, r_E_sels, r_E, r_I
+    return current_monitor_E, r_E_sels, r_E, r_I

@@ -25,7 +25,35 @@ def process_output_ibnn(output):
     return output
 
 
-def update_name_space_with_params(params, namespace, DC_input_ts, sino_input_ts):
+def update_name_space_with_params_2_currents(params, namespace, DC_input_ts, sino_input_ts):
+
+    DC_start_time1, DC_duration1, DC_amp1, DC_amp_slope1, \
+        DC_start_time2, DC_duration2, DC_amp2, DC_amp_slope2, = params
+
+    DC_input1 = set_params_utils.set_DC_input(DC_amp=DC_amp1,  # in nA
+                                              DC_amp_slope=DC_amp_slope1,  # in nA/s
+                                              DC_duration=DC_duration1,  # in ms
+                                              DC_start_time=DC_start_time1,  # in ms
+                                              timestep=DC_input_ts
+                                              )
+
+    DC_input2 = set_params_utils.set_DC_input(DC_amp=DC_amp2,  # in nA
+                                              DC_amp_slope=DC_amp_slope2,  # in nA/s
+                                              DC_duration=DC_duration2,  # in ms
+                                              DC_start_time=DC_start_time2,  # in ms
+                                              timestep=DC_input_ts
+                                              )
+
+    namespace['DC_input1'] = DC_input1
+    namespace['DC_input2'] = DC_input2
+
+    print(f'DC_amp1: {DC_amp1}, DC_amp_slope1: {DC_amp_slope1}, DC_start_time1: {DC_start_time1}, DC_duration1: {DC_duration1}')
+    print(f'DC_amp2: {DC_amp2}, DC_amp_slope2: {DC_amp_slope2}, DC_start_time2: {DC_start_time2}, DC_duration2: {DC_duration2}')
+
+    return namespace
+
+
+def update_name_space_with_params_4_currents(params, namespace, DC_input_ts, sino_input_ts):
 
     DC_start_time1, DC_duration1, DC_amp1, DC_amp_slope1, \
         DC_start_time2, DC_duration2, DC_amp2, DC_amp_slope2, \
@@ -93,7 +121,7 @@ def calculate_fr_diff_after_distractor(r_E_sels, fr_window=[2200, 3000]):
 
 
 def calculate_duration_of_pop1_persistent_activity(r_E_sels,
-                                                   fr_window=[1100, 3000],
+                                                   fr_window=[1100, 5000],
                                                    diff_cutout=10):
     t_in_window, rate_in_window1, _ = calculate_fr_in_window(
         r_E_sels[0], fr_window=fr_window)
@@ -120,11 +148,11 @@ def calculate_duration_of_pop1_persistent_activity(r_E_sels,
     return persistent_t
 
 
-def objective_function(params, net, namespace, DC_monitor_E, r_E, r_I, r_E_sels, E_index_map,
+def objective_function(params, net, namespace, current_monitor_E, r_E, r_I, r_E_sels, E_index_map,
                        process_input_func=None,
                        process_output_func=None,
                        currents_to_plot=[
-                           'I_DC1', 'I_DC2', 'I_sino1', 'I_sino2'],
+                           'I_DC1', 'I_DC2'],
                        DC_input_ts=1 * ms,
                        sino_input_ts=0.1 * ms,
                        maximize=True,
@@ -135,7 +163,7 @@ def objective_function(params, net, namespace, DC_monitor_E, r_E, r_I, r_E_sels,
     if process_input_func is not None:
         params = process_input_func(params)
 
-    namespace = update_name_space_with_params(
+    namespace = update_name_space_with_params_2_currents(
         params, namespace, DC_input_ts, sino_input_ts)
 
     net.run(5 * second, namespace=namespace)
@@ -149,11 +177,11 @@ def objective_function(params, net, namespace, DC_monitor_E, r_E, r_I, r_E_sels,
     if process_output_func is not None:
         output = process_output_func(output)
 
-    plotting_utils.plot_currents(
-        DC_monitor_E, None, currents_to_plot, E_index_map, title_prefix='')
+    # plotting_utils.plot_currents(
+    #     current_monitor_E, None, currents_to_plot, E_index_map, title_prefix='')
 
-    plotting_utils.plot_firing_rate(
-        r_E, r_I, r_E_sels, title_prefix='')
+    # plotting_utils.plot_firing_rate(
+    #     r_E, r_I, r_E_sels, title_prefix='')
 
     if maximize:
         value = output

@@ -3,7 +3,8 @@ from brian2 import *
 
 def write_eqs_E():
     eqs_E = '''
-    dv / dt = (- g_m_E * (v - V_L) - I_syn - I_DC1 - I_DC2 - I_sino1 - I_sino2) / C_m_E : volt (unless refractory)
+    #dv / dt = (- g_m_E * (v - V_L) - I_syn - I_DC1 - I_DC2 - I_sino1 - I_sino2) / C_m_E : volt (unless refractory)
+    dv / dt = (- g_m_E * (v - V_L) - I_syn - I_DC1 - I_DC2) / C_m_E : volt (unless refractory)
 
     I_syn = I_AMPA_ext + I_AMPA_rec + I_NMDA_rec + I_GABA_rec : amp
 
@@ -21,15 +22,16 @@ def write_eqs_E():
     # Define the stimulation currents
     I_DC1 = DC_input1(t) : amp
     I_DC2 = DC_input2(t) : amp
-    I_sino1 = sino_input1(t) : amp
-    I_sino2 = sino_input2(t) : amp
+    # I_sino1 = sino_input1(t) : amp
+    # I_sino2 = sino_input2(t) : amp
     '''
     return eqs_E
 
 
 def write_eqs_I():
     eqs_I = '''
-        dv / dt = (- g_m_I * (v - V_L) - I_syn - I_DC1 - I_DC2 - I_sino1 - I_sino2) / C_m_I : volt (unless refractory)
+        #dv / dt = (- g_m_I * (v - V_L) - I_syn - I_DC1 - I_DC2 - I_sino1 - I_sino2) / C_m_I : volt (unless refractory)
+        dv / dt = (- g_m_I * (v - V_L) - I_syn - I_DC1 - I_DC2) / C_m_I : volt (unless refractory)
 
         I_syn = I_AMPA_ext + I_AMPA_rec + I_NMDA_rec + I_GABA_rec : amp
 
@@ -47,8 +49,8 @@ def write_eqs_I():
         # Define the stimulation currents
         I_DC1 = DC_input1(t) : amp
         I_DC2 = DC_input2(t) : amp
-        I_sino1 = sino_input1(t) : amp
-        I_sino2 = sino_input2(t) : amp
+        # I_sino1 = sino_input1(t) : amp
+        # I_sino2 = sino_input2(t) : amp
         '''
     return eqs_I
 

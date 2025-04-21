@@ -49,13 +49,12 @@ def plot_raster(N_activity_plot, sp_E, sp_I, sp_E_sels, p, title_prefix=''):
     show()
 
 
-
 def _plot_neuron_currents(monitor, E_index_map, currents_to_plot, is_inhibitory=False,
                           title_prefix='', pop_to_plot=[1]):
-    
+
     if monitor is None:
         # raise a warning
-        print("DC_monitor_I is None, skipping plot.")
+        print("current_monitor_I is None, skipping plot.")
         return
 
     figure(figsize=(8, 4))
@@ -75,7 +74,7 @@ def _plot_neuron_currents(monitor, E_index_map, currents_to_plot, is_inhibitory=
         ylabel('Current (A)')
 
         for _, current in enumerate(currents_to_plot):
-            if current in ['I_DC1', 'I_DC2', 'I_sino1', 'I_sino2']:
+            if current in ['I_DC1', 'I_DC2']:
                 plot(monitor.t / ms, getattr(monitor, current)
                      [i], label=current, linewidth=2, alpha=0.8)
             else:
@@ -85,24 +84,27 @@ def _plot_neuron_currents(monitor, E_index_map, currents_to_plot, is_inhibitory=
     show()
 
 
-def plot_E_sel_1_currents(DC_monitor_E, E_index_map, currents_to_plot, title_prefix=''):
-    _plot_neuron_currents(DC_monitor_E, E_index_map, currents_to_plot,
+def plot_E_sel_1_currents(current_monitor_E, E_index_map, currents_to_plot, title_prefix=''):
+    _plot_neuron_currents(current_monitor_E, E_index_map, currents_to_plot,
                           is_inhibitory=False, title_prefix=title_prefix,
                           pop_to_plot=[1])
 
-def plot_E_neuron_currents(DC_monitor_E, E_index_map, currents_to_plot, title_prefix='', pop_to_plot=None):
-    _plot_neuron_currents(DC_monitor_E, E_index_map, currents_to_plot,
+
+def plot_E_neuron_currents(current_monitor_E, E_index_map, currents_to_plot, title_prefix='', pop_to_plot=None):
+    _plot_neuron_currents(current_monitor_E, E_index_map, currents_to_plot,
                           is_inhibitory=False, title_prefix=title_prefix,
                           pop_to_plot=pop_to_plot)
 
-def plot_I_neuron_currents(DC_monitor_I, currents_to_plot, title_prefix):
-    _plot_neuron_currents(DC_monitor_I, {}, currents_to_plot,
+
+def plot_I_neuron_currents(current_monitor_I, currents_to_plot, title_prefix):
+    _plot_neuron_currents(current_monitor_I, {}, currents_to_plot,
                           is_inhibitory=True, title_prefix=title_prefix)
 
-def plot_currents(DC_monitor_E, DC_monitor_I, currents_to_plot, E_index_map, title_prefix=''):
-    plot_E_sel_1_currents(DC_monitor_E, E_index_map,
+
+def plot_currents(current_monitor_E, current_monitor_I, currents_to_plot, E_index_map, title_prefix=''):
+    plot_E_sel_1_currents(current_monitor_E, E_index_map,
                           currents_to_plot, title_prefix)
 
-    # plot_E_neuron_currents(DC_monitor_E, E_index_map,
+    # plot_E_neuron_currents(current_monitor_E, E_index_map,
     #                        currents_to_plot, title_prefix)
-    # plot_I_neuron_currents(DC_monitor_I, currents_to_plot, title_prefix)
+    # plot_I_neuron_currents(current_monitor_I, currents_to_plot, title_prefix)
