@@ -1,3 +1,5 @@
 .DS_Store
 BayesOpt/Baselines/
 temp_results/
+copy_to_train.ipynb
+all_stored_results/
