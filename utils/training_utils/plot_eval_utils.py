@@ -1,8 +1,8 @@
 # code is adapted from https://brian2.readthedocs.io/en/stable/examples/frompapers.Brunel_Wang_2001.html
 
-from utils.methods_utils import ibnn_utils, shared_utils, turbo_utils, baseline_bo_utils
+from utils.methods_utils import ibnn_utils, shared_utils
 from utils.sim_utils import set_params_utils, eqs_utils, plotting_utils, obj_func_utils, set_param_space
-from utils.methods_utils import ibnn_utils, shared_utils, turbo_utils, baseline_bo_utils, cma_utils
+from utils.methods_utils import ibnn_utils, shared_utils, cma_utils
 
 from brian2 import *
 from botorch.utils.transforms import unnormalize
@@ -43,6 +43,7 @@ import math
 import os
 import sys
 from matplotlib.ticker import MaxNLocator
+
 
 def plot_both_value_and_cum_max_over_iter(x_dict,
                                           y_dict,
@@ -254,11 +255,11 @@ def plot_top_param_distributions(space, stim_bounds, x_dict, y_dict, num_top_poi
 
             y_level = method_to_y_pos_mapping[method]
             ax.plot(top_param_values, [
-                    y_level] * num_top_points, 'o', markersize=7, 
+                    y_level] * num_top_points, 'o', markersize=7,
                     markerfacecolor='none', markeredgewidth=2, alpha=0.85,)
 
         ax.set_xlim(bounds.tolist())
-        #ax.set_title(f"{param_name}: {bounds.tolist()}")
+        # ax.set_title(f"{param_name}: {bounds.tolist()}")
         ax.set_title(f"{param_name}")
         ax.set_yticks(list(method_to_y_pos_mapping.values()))
         if y_tick_label_mapping is not None:
@@ -274,9 +275,9 @@ def plot_top_param_distributions(space, stim_bounds, x_dict, y_dict, num_top_poi
         ax.xaxis.set_major_locator(MaxNLocator(nbins=5))
 
         ax.tick_params(axis='x', labelsize=13)
-        #ax.tick_params(axis='y', labelsize=13)
+        # ax.tick_params(axis='y', labelsize=13)
 
-        #ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize=11)
+        # ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize=11)
 
         if show_plot:
             plt.show()

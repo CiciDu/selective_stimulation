@@ -1,6 +1,6 @@
 # code is adapted from https://brian2.readthedocs.io/en/stable/examples/frompapers.Brunel_Wang_2001.html
 
-from utils.methods_utils import ibnn_utils, shared_utils, turbo_utils, baseline_bo_utils
+from utils.methods_utils import ibnn_utils, shared_utils
 from utils.sim_utils import set_params_utils, eqs_utils, plotting_utils, obj_func_utils, set_param_space
 from brian2 import *
 from botorch.utils.transforms import unnormalize
