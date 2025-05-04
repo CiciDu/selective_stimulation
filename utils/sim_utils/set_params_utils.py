@@ -7,20 +7,11 @@ def set_DC_input(DC_amp=0.5,  # in nA
                  DC_start_time=0,  # in ms
                  timestep=1 * ms
                  ):
-
-    # get number of timestamps before the DC current starts
-    DC_prior_start_ts = int(DC_start_time * ms / timestep)
-    # get number of timestamps in the DC duration
-    DC_ts = int(DC_duration * ms / timestep)
-
-    # make DC input incorporate the slope
-    # Time array in seconds
-    time_array = np.arange(DC_ts) * timestep
-    # Compute ramping DC current in nA
-    DC_array = DC_amp + DC_amp_slope * (time_array / second)
-
-    DC_input = TimedArray(
-        np.r_[np.zeros(DC_prior_start_ts), DC_array, np.zeros(50)] * nA, dt=timestep)
+    MAX_LEN = int(10000 * ms / timestep)
+    DC_input_array = np.zeros(MAX_LEN) * nA
+    DC_input = TimedArray(DC_input_array, dt=timestep)
+    update_DC_input(DC_input, DC_amp, DC_amp_slope,
+                               DC_duration, DC_start_time, timestep)
     return DC_input
 
 
@@ -31,30 +22,52 @@ def set_sino_input(sino_start_time=0,  # in ms
                    timestep=0.1 * ms
                    ):
 
-    sino_prior_start_ts = int(sino_start_time * ms / timestep)
-    sino_ts = arange(int(sino_duration * ms / timestep)) * \
-        timestep  # break the time into timestep
-    sino_array = sino_amp * sin(2 * pi * sino_freq * Hz * sino_ts)
-    sino_input = TimedArray(
-        np.r_[np.zeros(sino_prior_start_ts), sino_array, np.zeros(50)] * nA, dt=timestep)
+    MAX_LEN = int(10000 * ms / timestep)
+    sino_input_array = np.zeros(MAX_LEN) * nA
+    sino_input = TimedArray(sino_input_array, dt=timestep)
+
+    update_sino_input(sino_input, sino_start_time,
+                                   sino_duration, sino_amp, sino_freq, timestep)
+
     return sino_input
 
 
-# def set_sino_input(sino_start_time=0,  # in ms
-#                    sino_duration=3000,  # in ms
-#                    sino_amp1=5,  # in nA
-#                    sino_amp2=10,  # in nA
-#                    sino_freq1=0.5,  # in Hz
-#                    sino_freq2=1,  # in Hz
-#                    timestep=25 * ms
-#                    ):
+def update_DC_input(DC_input, DC_amp=0.5, DC_amp_slope=0, DC_duration=800, DC_start_time=0, timestep=1 * ms):
+    # Number of steps before start
+    DC_prior_start_ts = int(DC_start_time * ms / timestep)
+    # Number of steps for duration
+    DC_ts = int(DC_duration * ms / timestep)
 
-#     sino_prior_start_ts = int(sino_start_time * ms / timestep)
-#     sino_ts = arange(int(sino_duration * ms / timestep)) * timestep  # break the time into timestep
-#     sino_array = sino_amp1 * sin(2 * pi * sino_freq1 * Hz * sino_ts) + sino_amp2 * sin(2 * pi * sino_freq2 * Hz * sino_ts)
-#     sino_input = TimedArray(
-#         np.r_[np.zeros(sino_prior_start_ts), sino_array] * nA, dt=timestep)
-#     return sino_input
+    # Time array in seconds
+    time_array = np.arange(DC_ts) * timestep
+    DC_array = (DC_amp + DC_amp_slope * (time_array / second)) * nA
+
+    # Clear and update values
+    DC_input.values[:] = 0 * nA
+    DC_input.values[DC_prior_start_ts:DC_prior_start_ts + DC_ts] = DC_array
+
+
+def update_sino_input(sino_input,
+                      sino_start_time=0,  # in ms
+                      sino_duration=3000,  # in ms
+                      sino_amp=5,  # in nA
+                      sino_freq=0.5,  # in Hz
+                      timestep=0.1 * ms):
+
+    sino_input.values[:] = 0 * nA
+
+    # Index where sinusoidal input begins
+    sino_start_idx = int(sino_start_time * ms / timestep)
+    sino_len = int(sino_duration * ms / timestep)
+
+    # Time array for sinusoid
+    sino_ts = np.arange(sino_len) * timestep
+    sino_array = sino_amp * \
+        np.sin(2 * np.pi * sino_freq * sino_ts / second) * nA
+
+    # Insert into preallocated array
+    sino_input.values[sino_start_idx:sino_start_idx + sino_len] = sino_array
+
 
 
 def set_voltage():

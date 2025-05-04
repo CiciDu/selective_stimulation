@@ -6,7 +6,7 @@ from skopt.space import Real
 DC_amp1_range = [-0.3, 0.3]            # in nA
 DC_amp_slope1_range = [-0.2, 0.2]    # in nA/ms
 DC_start_time1_range = [0, 2000]     # in ms
-DC_duration1_range = [20, 6000]      # in ms
+DC_duration1_range = [20, 8000]      # in ms
 
 # DC_amp1_range = [-0.3, 0]            # in nA
 # DC_amp_slope1_range = [-0.2, 0.2]    # in nA/ms
@@ -49,3 +49,7 @@ space = [
     # Real(sino_amp2_range[0], sino_amp2_range[1], name='sino_amp2'),
     # Real(sino_freq2_range[0], sino_freq2_range[1], name='sino_freq2')
 ]
+
+space_norm = [Real(0, 1, name=dim.name) for dim in space]
+stim_bounds = torch.tensor([[dim.low, dim.high]
+                           for dim in space], dtype=torch.float).T

@@ -1,4 +1,5 @@
-# --- System path setup ---
+# code is adapted from https://brian2.readthedocs.io/en/stable/examples/frompapers.Brunel_Wang_2001.html
+
 from utils.methods_utils import ibnn_utils, shared_utils, turbo_utils, baseline_bo_utils
 from utils.sim_utils import set_params_utils, eqs_utils, plotting_utils, obj_func_utils, set_param_space
 from brian2 import *
@@ -44,8 +45,8 @@ import sys
 print("Current directory:", os.getcwd())
 
 # --- Environment settings ---
-nrn_options = "-nogui -NSTACK 100000 -NFRAME 20000"
-os.environ["NEURON_MODULE_OPTIONS"] = nrn_options
+
+
 np.random.seed(237)
 
 warnings.filterwarnings("ignore", category=BadInitialCandidatesWarning)
@@ -65,7 +66,6 @@ DC_amp = 0
 DC_input_ts = 1 * ms
 sino_input_ts = 0.1 * ms
 
-
 # external stimuli
 # rate = 3 * Hz # in external noise
 currents_to_track = ['I_syn', 'I_AMPA_ext', 'I_GABA_rec',
@@ -74,7 +74,7 @@ currents_to_plot = currents_to_track
 
 # set direct currents
 DC_input1 = set_params_utils.set_DC_input()
-DC_input2 = set_params_utils.set_DC_input()
+# DC_input2 = set_params_utils.set_DC_input()
 
 
 # run initial simulation
@@ -147,7 +147,7 @@ net.add(P_E, P_I, C_E_E, C_E_I, C_I_I, C_I_E, C_P_E, C_P_I)
 
 net.store('initial')
 
-net.run(6.1 * second, report='stdout')
+net.run(8.1 * second, report='stdout')
 
 plotting_utils.plot_firing_rate(r_E, r_I, r_E_sels)
 plotting_utils.plot_currents(
@@ -171,6 +171,7 @@ namespace = {'V_L': V_L, 'V_thr': V_thr, 'V_reset': V_reset, 'V_E': V_E, 'V_I': 
              'g_GABA_E': g_GABA_E, 'g_GABA_I': g_GABA_I, 'tau_GABA': tau_GABA,
              'stimuli1': stimuli1,
              # 'stimuli2': stimuli2,
+             'DC_input1': DC_input1,
              }
 
 objective_with_factor = partial(obj_func_utils.objective_function, net=net, namespace=namespace, stim_bounds=stim_bounds, current_monitor_E=current_monitor_E, r_E=r_E, r_I=r_I, r_E_sels=r_E_sels,
@@ -180,3 +181,7 @@ objective_with_factor = partial(obj_func_utils.objective_function, net=net, name
 objective_func_tensor = partial(obj_func_utils.objective_function, net=net, namespace=namespace, stim_bounds=stim_bounds, current_monitor_E=current_monitor_E, r_E=r_E, r_I=r_I, r_E_sels=r_E_sels,
                                 process_input_func=obj_func_utils.process_input_tensor, process_output_func=obj_func_utils.process_output_tensor, E_index_map=E_index_map,
                                 maximize=True)
+
+objective_func_tensor_w_plot = partial(obj_func_utils.objective_function, net=net, namespace=namespace, stim_bounds=stim_bounds, current_monitor_E=current_monitor_E, r_E=r_E, r_I=r_I, r_E_sels=r_E_sels,
+                                       process_input_func=obj_func_utils.process_input_tensor, process_output_func=obj_func_utils.process_output_tensor, E_index_map=E_index_map,
+                                       maximize=True, plotting=True)

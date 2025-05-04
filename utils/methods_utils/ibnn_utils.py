@@ -78,7 +78,7 @@ def create_f(input_dims, seed):
     return f
 
 
-def gp_bo_loop(f, bounds, init_x, init_y, kernel, n_iterations, acqf_class, optimize_hypers=False, result_dir='all_stored_results/ibnn_results', seed=0):
+def gp_bo_loop(f, bounds, init_x, init_y, kernel, n_iterations, acqf_class, optimize_hypers=False, result_dir='all_stored_results/all_ibnn', seed=0):
 
     result_folder = os.path.join(result_dir, 'temp_results')
     if not os.path.exists(result_folder):

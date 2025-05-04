@@ -63,8 +63,12 @@ def separate_cma_results_by_pop(updated_x, updated_y, pop_size):
 
     # Get top index and corresponding values/params
     top_index_over_iter = torch.argmax(y_over_iter, dim=1)
-    top_y_over_iter = y_over_iter[torch.arange(num_iter), top_index_over_iter]
-    top_params_over_iter = params_over_iter[torch.arange(
+    cma_top_y_over_iter = y_over_iter[torch.arange(
+        num_iter), top_index_over_iter]
+    cma_top_params_over_iter = params_over_iter[torch.arange(
         num_iter), top_index_over_iter]
 
-    return top_y_over_iter, top_params_over_iter, top_index_over_iter
+    # find the top index in the original list
+    cmu_top_index_over_iter = top_index_over_iter + np.arange(0, len(top_index_over_iter) * pop_size, pop_size)
+    
+    return cma_top_y_over_iter, cma_top_params_over_iter, cmu_top_index_over_iter

@@ -29,97 +29,15 @@ def update_name_space_with_params_1_current(params, namespace, DC_input_ts, sino
 
     DC_start_time1, DC_duration1, DC_amp1, DC_amp_slope1 = params
 
-    DC_input1 = set_params_utils.set_DC_input(DC_amp=DC_amp1,  # in nA
-                                              DC_amp_slope=DC_amp_slope1,  # in nA/s
-                                              DC_duration=DC_duration1,  # in ms
-                                              DC_start_time=DC_start_time1,  # in ms
-                                              timestep=DC_input_ts
-                                              )
-
-    namespace['DC_input1'] = DC_input1
-
-    print(f'DC_amp1: {DC_amp1}, DC_amp_slope1: {DC_amp_slope1}, DC_start_time1: {DC_start_time1}, DC_duration1: {DC_duration1}')
-
-    return namespace
-
-
-def update_name_space_with_params_2_currents(params, namespace, DC_input_ts, sino_input_ts):
-
-    DC_start_time1, DC_duration1, DC_amp1, DC_amp_slope1, \
-        DC_start_time2, DC_duration2, DC_amp2, DC_amp_slope2, = params
-
-    DC_input1 = set_params_utils.set_DC_input(DC_amp=DC_amp1,  # in nA
-                                              DC_amp_slope=DC_amp_slope1,  # in nA/s
-                                              DC_duration=DC_duration1,  # in ms
-                                              DC_start_time=DC_start_time1,  # in ms
-                                              timestep=DC_input_ts
-                                              )
-
-    DC_input2 = set_params_utils.set_DC_input(DC_amp=DC_amp2,  # in nA
-                                              DC_amp_slope=DC_amp_slope2,  # in nA/s
-                                              DC_duration=DC_duration2,  # in ms
-                                              DC_start_time=DC_start_time2,  # in ms
-                                              timestep=DC_input_ts
-                                              )
-
-    namespace['DC_input1'] = DC_input1
-    namespace['DC_input2'] = DC_input2
+    set_params_utils.update_DC_input(namespace['DC_input1'],
+                                     DC_amp=DC_amp1,  # in nA
+                                     DC_amp_slope=DC_amp_slope1,  # in nA/s
+                                     DC_duration=DC_duration1,  # in ms
+                                     DC_start_time=DC_start_time1,  # in ms
+                                     timestep=DC_input_ts
+                                     )
 
     print(f'DC_amp1: {DC_amp1}, DC_amp_slope1: {DC_amp_slope1}, DC_start_time1: {DC_start_time1}, DC_duration1: {DC_duration1}')
-    print(f'DC_amp2: {DC_amp2}, DC_amp_slope2: {DC_amp_slope2}, DC_start_time2: {DC_start_time2}, DC_duration2: {DC_duration2}')
-
-    return namespace
-
-
-def update_name_space_with_params_4_currents(params, namespace, DC_input_ts, sino_input_ts):
-
-    DC_start_time1, DC_duration1, DC_amp1, DC_amp_slope1, \
-        DC_start_time2, DC_duration2, DC_amp2, DC_amp_slope2, \
-        sino_start_time1, sino_duration1, sino_amp1, sino_freq1, \
-        sino_start_time2, sino_duration2, sino_amp2, sino_freq2 = params
-
-    DC_input1 = set_params_utils.set_DC_input(DC_amp=DC_amp1,  # in nA
-                                              DC_amp_slope=DC_amp_slope1,  # in nA/s
-                                              DC_duration=DC_duration1,  # in ms
-                                              DC_start_time=DC_start_time1,  # in ms
-                                              timestep=DC_input_ts
-                                              )
-
-    DC_input2 = set_params_utils.set_DC_input(DC_amp=DC_amp2,  # in nA
-                                              DC_amp_slope=DC_amp_slope2,  # in nA/s
-                                              DC_duration=DC_duration2,  # in ms
-                                              DC_start_time=DC_start_time2,  # in ms
-                                              timestep=DC_input_ts
-                                              )
-
-    sino_input1 = set_params_utils.set_sino_input(sino_start_time=sino_start_time1,  # in ms
-                                                  sino_duration=sino_duration1,  # in ms
-                                                  sino_amp=sino_amp1,  # in nA
-                                                  sino_freq=sino_freq1,  # in Hz
-                                                  timestep=sino_input_ts
-                                                  )
-
-    sino_input2 = set_params_utils.set_sino_input(sino_start_time=sino_start_time2,  # in ms
-                                                  sino_duration=sino_duration2,  # in ms
-                                                  sino_amp=sino_amp2,  # in nA
-                                                  sino_freq=sino_freq2,  # in Hz
-                                                  timestep=sino_input_ts
-                                                  )
-
-    namespace['DC_input1'] = DC_input1
-    namespace['DC_input2'] = DC_input2
-    namespace['sino_input1'] = sino_input1
-    namespace['sino_input2'] = sino_input2
-
-    print(f'DC_amp1: {DC_amp1}, DC_amp_slope1: {DC_amp_slope1}, DC_start_time1: {DC_start_time1}, DC_duration1: {DC_duration1}')
-    print(f'DC_amp2: {DC_amp2}, DC_amp_slope2: {DC_amp_slope2}, DC_start_time2: {DC_start_time2}, DC_duration2: {DC_duration2}')
-    print(f'sino_amp1: {sino_amp1}, sino_freq1: {sino_freq1}, sino_start_time1: {sino_start_time1}, sino_duration1: {sino_duration1}')
-    print(f'sino_amp2: {sino_amp2}, sino_freq2: {sino_freq2}, sino_start_time2: {sino_start_time2}, sino_duration2: {sino_duration2}')
-
-    # print(f'DC_start_time1: {DC_start_time1}, DC_duration1: {DC_duration1}, DC_amp1: {DC_amp1}, DC_amp_slope1: {DC_amp_slope1}')
-    # print(f'DC_start_time2: {DC_start_time2}, DC_duration2: {DC_duration2}, DC_amp2: {DC_amp2}, DC_amp_slope2: {DC_amp_slope2}')
-    # print(f'sino_start_time1: {sino_start_time1}, sino_duration1: {sino_duration1}, sino_amp1: {sino_amp1}, sino_freq1: {sino_freq1}')
-    # print(f'sino_start_time2: {sino_start_time2}, sino_duration2: {sino_duration2}, sino_amp2: {sino_amp2}, sino_freq2: {sino_freq2}')
 
     return namespace
 
@@ -196,7 +114,7 @@ def objective_function(params, net, namespace, stim_bounds,
                        sino_input_ts=0.1 * ms,
                        maximize=True,
                        plotting=False,
-                       fr_window=[1100, 6100],
+                       fr_window=[1100, 8100],
                        smoothing_width=50 * ms,
                        results=None,
                        idx=None,
@@ -214,7 +132,7 @@ def objective_function(params, net, namespace, stim_bounds,
     namespace = update_name_space_with_params_1_current(
         params, namespace, DC_input_ts, sino_input_ts)
 
-    net.run(6.1 * second, namespace=namespace)
+    net.run(8.1 * second, namespace=namespace)
 
     # fr_diff = calculate_fr_diff_after_distractor(r_E_sels)
     # output = fr_diff

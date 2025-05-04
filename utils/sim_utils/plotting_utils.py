@@ -9,9 +9,9 @@ def plot_firing_rate(r_E, r_I, r_E_sels, title_prefix='', smoothing_width=25 * m
 
     # plotting
     figure(figsize=(8, 4))
-    title(title_prefix + 'Population rates')
-    xlabel('ms')
-    ylabel('Hz')
+    title(title_prefix + 'Population Firing Rates', fontsize=18)
+    xlabel('Time (ms)', fontsize=16)
+    ylabel('Population Firing Rate (Hz)', fontsize=14)
 
     plot(r_E.t / ms, r_E.smooth_rate(width=smoothing_width) / Hz, label='nonselective')
     plot(r_I.t / ms, r_I.smooth_rate(width=smoothing_width) / Hz, label='inhibitory')
@@ -21,7 +21,7 @@ def plot_firing_rate(r_E, r_I, r_E_sels, title_prefix='', smoothing_width=25 * m
         plot(r_E_sel.t / ms, r_E_sel.smooth_rate(width=smoothing_width) / Hz,
              label=f"selective {p - i}")
 
-    legend()
+    legend(loc='best', fontsize=13)
     show()
     return
 
@@ -70,17 +70,17 @@ def _plot_neuron_currents(monitor, E_index_map, currents_to_plot, is_inhibitory=
         #     title(title_prefix + "Inhibitory Population Currents")
         # else:
         #     title(title_prefix + E_index_map[i])
-        title('Currents applied to all neurons')
-        xlabel('Time (ms)')
-        ylabel('Current (A)')
+        title('Current applied to all neurons', fontsize=18)
+        xlabel('Time (ms)', fontsize=16)
+        ylabel('Current (nA)', fontsize=14)
 
         for _, current in enumerate(currents_to_plot):
             if current in ['I_DC1']:
-                plot(monitor.t / ms, getattr(monitor, current)
-                     [i], label=current, linewidth=2, alpha=0.8)
+                plot(monitor.t / ms, getattr(monitor, current)[i]*10**9,
+                     label=current, linewidth=2, alpha=0.8)
             else:
                 plot(monitor.t / ms,
-                     getattr(monitor, current)[i], label=current, linewidth=0.5, alpha=0.5)
+                     getattr(monitor, current)[i]*10**9, label=current, linewidth=0.5, alpha=0.5)
         legend(loc='best')
     show()
 
